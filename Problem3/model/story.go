@@ -1,5 +1,10 @@
 package model
 
+import (
+	"encoding/json"
+	"io"
+)
+
 // Story Represents a story
 type Story map[string]Chapter
 
@@ -14,4 +19,15 @@ type Chapter struct {
 type Option struct {
 	Text string `json:"text"`
 	Arc  string `json:"arc"`
+}
+
+// JSONStory Decode io.Reader containing the story into a JSON document
+func JSONStory(r io.Reader) (Story, error) {
+	decoder := json.NewDecoder(r)
+	var story Story
+	err := decoder.Decode(&story)
+	if err != nil {
+		return nil, err
+	}
+	return story, nil
 }

@@ -1,34 +1,17 @@
 package main
 
 import (
-	"encoding/json"
-	"fmt"
+	"flag"
 	"os"
+
+	"github.com/yasithA/goLearning/Problem3/model"
 )
 
-type story map[string]chapter
-
-type chapter struct {
-	Title      string   `json:"title"`
-	Paragraphs []string `json:"story"`
-	Options    []option `json:"options"`
-}
-
-type option struct {
-	Text string `json:"text"`
-	Arc  string `json:"arc"`
-}
-
 func main() {
-	storyFile, _ := os.Open("story.json")
+	filename := flag.String("file", "story.json", "The JSON file with CYOA story.")
+
+	storyFile, _ := os.Open(*filename)
 	defer storyFile.Close()
 
-	decoder := json.NewDecoder(storyFile)
-	//var storyArcs storyArc
-	var story story
-	err := decoder.Decode(&story)
-	if err != nil {
-		fmt.Println(err)
-	}
-	fmt.Println(story["intro"].Title)
+	story, err := model.JSONStory(storyFile)
 }
